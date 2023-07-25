@@ -5,7 +5,7 @@ CustomHeaderView::CustomHeaderView(Qt::Orientation orientation, QWidget *parent)
     QHeaderView(orientation, parent)
 {
     setSectionsClickable(true); //true - заголовок будет реагировать на одиночные клики
-    setSectionsClickable(false);
+
 }
 
 void CustomHeaderView::paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const
