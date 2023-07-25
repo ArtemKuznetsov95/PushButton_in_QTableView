@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <../TableModel.h>
 #include <../CustomHeaderView.h>
+#include <../CustomDelegateView.h>
 
 namespace Ui {
 class Table;
@@ -19,6 +20,7 @@ class Table : public QWidget
 public:
     explicit Table(QWidget *parent = nullptr);
     ~Table();
+
 public slots:
     ///
     /// \brief createButton - Функция создания кнопок поверх ячеек
@@ -28,7 +30,7 @@ public slots:
     /// \brief onBtnClicked - Функция удаления строки
     /// \param index        - Индекс строки нажатой кнопки "Удаление точки"
     ///
-    void onBtnClicked(int index);
+    void onBtnClicked(QModelIndex index);
     ///
     /// \brief onSectionClicked - Функция добавления строки
     /// \param logicalIndex     - Индекс столбца

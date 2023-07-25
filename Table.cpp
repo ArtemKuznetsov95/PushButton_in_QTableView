@@ -21,19 +21,17 @@ Table::Table(QWidget *parent) : QWidget(parent), ui(new Ui::Table) {
 Table::~Table() { delete ui; }
 
 void Table::createButton() {
-  QSignalMapper *signalMapper = new QSignalMapper(this);                                    //Класс собирает сигналы от группы кнопок
-  for (int itemTableView = 0; itemTableView < m_model->rowCount(); itemTableView++) {
-    int columnButton = 3;
-    QPushButton *button = new QPushButton("Удалить точку");
-    ui->m_tableView->setIndexWidget(m_model->index(itemTableView, columnButton), button);   //Вставляем кнопку удаления в ячеку
-    signalMapper->setMapping(button, itemTableView);                                        //signalMapper сопоставляет кнопку со строкой ее нахождения
-    connect(button, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));                      //Сигнал кнопки отлавливает signalMapper
-  }
-  connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(onBtnClicked(int)));                //signalMapper передает слоту индекс строки при нажатии кнопки
+    CustomDelegateView *delegate = new CustomDelegateView(this);                            //Ручное редактирование ячеек
+    ui->m_tableView->setItemDelegate(delegate);
+    connect(delegate, &CustomDelegateView::signalClicked, [this](QModelIndex index) {
+        int result = QMessageBox::warning(this, "Предупреждение!", "Подтвердите удаление", QMessageBox::Yes, QMessageBox::No);
+        if(result == QMessageBox::Yes)
+            this->onBtnClicked(index);
+    });
 }
 
-void Table::onBtnClicked(int indexRow) {
-    m_model->deleted(indexRow);                                                             //Передача индекса строки в модель для удаления
+void Table::onBtnClicked(QModelIndex index) {
+    m_model->deleted(index.row());                                                          //Передача индекса строки в модель для удаления
 }
 
 void Table::onSectionClicked(int logicalIndex)
