@@ -24,7 +24,7 @@ void CustomDelegateView::paint(QPainter *painter, const QStyleOptionViewItem &op
 bool CustomDelegateView::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
     QItemDelegate::editorEvent(event, model, option,index);
-    if(event->type() == QEvent::MouseButtonRelease) {       //При нажатии испускать сигнал
+    if(event->type() == QEvent::MouseButtonRelease && index.column() == 3) {       //При нажатии испускать сигнал
         emit signalClicked(index);
     }
     return true;

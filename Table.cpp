@@ -23,7 +23,11 @@ Table::~Table() { delete ui; }
 void Table::createButton() {
     CustomDelegateView *delegate = new CustomDelegateView(this);                            //Ручное редактирование ячеек
     ui->m_tableView->setItemDelegate(delegate);
-    connect(delegate, &CustomDelegateView::signalClicked, this, &Table::onBtnClicked);      //Сигнал нажатие кнопки из таблицы
+    connect(delegate, &CustomDelegateView::signalClicked, [this](QModelIndex index) {
+        int result = QMessageBox::warning(this, "Предупреждение!", "Подтвердите удаление", QMessageBox::Yes, QMessageBox::No);
+        if(result == QMessageBox::Yes)
+            this->onBtnClicked(index);
+    });
 }
 
 void Table::onBtnClicked(QModelIndex index) {
