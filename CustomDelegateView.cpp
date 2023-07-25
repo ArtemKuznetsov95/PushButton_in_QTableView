@@ -5,7 +5,7 @@
 CustomDelegateView::CustomDelegateView(QObject *parent) :
     QItemDelegate(parent)
 {
-
+    setClipping(true); //Отключение выделения ячейки
 }
 
 void CustomDelegateView::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const

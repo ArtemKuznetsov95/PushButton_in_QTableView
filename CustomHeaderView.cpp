@@ -1,13 +1,16 @@
 #include "CustomHeaderView.h"
+#include <QDebug>
 
 CustomHeaderView::CustomHeaderView(Qt::Orientation orientation, QWidget *parent) :
     QHeaderView(orientation, parent)
 {
     setSectionsClickable(true); //true - заголовок будет реагировать на одиночные клики
+    setSectionsClickable(false);
 }
 
 void CustomHeaderView::paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const
 {
+    qDebug() << "захожу";
     QHeaderView::paintSection(painter, rect, logicalIndex);                                     //Рисует заголовки по заданным по умолчании параметрамм
 
     //Если столбец == 3, в который мы хотим вставить кнопку
