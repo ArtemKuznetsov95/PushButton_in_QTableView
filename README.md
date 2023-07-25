@@ -1,1 +1,4 @@
-# PushButton_in_QTableView
+# PushButton in QTableView  
+Пример использования кнопок в нутри таблицы, а так же в заголовке.  
+CustomHeaderView.cpp - Класс для рисования кнопки в header QTableview.  
+DataModel.cpp        - Шаблон для хранения данных, который можно переделать для взаимосвязи с запросами к БД.   
