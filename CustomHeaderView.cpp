@@ -10,7 +10,6 @@ CustomHeaderView::CustomHeaderView(Qt::Orientation orientation, QWidget *parent)
 
 void CustomHeaderView::paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const
 {
-    qDebug() << "захожу";
     QHeaderView::paintSection(painter, rect, logicalIndex);                                     //Рисует заголовки по заданным по умолчании параметрамм
 
     //Если столбец == 3, в который мы хотим вставить кнопку
