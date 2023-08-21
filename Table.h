@@ -3,9 +3,10 @@
 
 #include <QWidget>
 #include <QMessageBox>
-#include <../TableModel.h>
-#include <../CustomHeaderView.h>
-#include <../CustomDelegateView.h>
+#include <TableModel.h>
+#include <CustomHeaderView.h>
+#include <CustomDelegateView.h>
+#include <DataDialogAdd.h>
 
 namespace Ui {
 class Table;

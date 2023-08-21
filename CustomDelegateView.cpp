@@ -1,11 +1,10 @@
 #include "CustomDelegateView.h"
 #include <QApplication>
-#include <QDebug>
 
 CustomDelegateView::CustomDelegateView(QObject *parent) :
     QItemDelegate(parent)
 {
-    setClipping(true); //Отключение выделения ячейки
+
 }
 
 void CustomDelegateView::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -19,13 +18,15 @@ void CustomDelegateView::paint(QPainter *painter, const QStyleOptionViewItem &op
         button.state = QStyle::State_Enabled;
         QApplication::style()->drawControl(QStyle::CE_PushButton, &button, painter);
     }
+
 }
 
 bool CustomDelegateView::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
-    QItemDelegate::editorEvent(event, model, option,index);
-    if(event->type() == QEvent::MouseButtonRelease && index.column() == 3) {       //При нажатии испускать сигнал
+    if(event->type() == QEvent::MouseButtonRelease && index.column() == 3) {
         emit signalClicked(index);
     }
+    else
+        QItemDelegate::editorEvent(event, model, option,index);
     return true;
 }

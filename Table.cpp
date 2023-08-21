@@ -8,6 +8,7 @@ Table::Table(QWidget *parent) : QWidget(parent), ui(new Ui::Table) {
   m_model = new TableModel();
   ui->m_tableView->setModel(m_model);
   ui->m_tableView->verticalHeader()->hide();                                                //Скрытие вертикального заголовка таблицы
+  ui->m_tableView->setSelectionMode(QAbstractItemView::SingleSelection);
 
   CustomHeaderView *header = new CustomHeaderView(Qt::Horizontal, ui->m_tableView);         //Передача заголовков таблицы в ручное редактирование через вспомогательный класс
   ui->m_tableView->setHorizontalHeader(header);                                             //Установка новых заголовков в таблицу
@@ -21,8 +22,8 @@ Table::Table(QWidget *parent) : QWidget(parent), ui(new Ui::Table) {
 Table::~Table() { delete ui; }
 
 void Table::createButton() {
-    CustomDelegateView *delegate = new CustomDelegateView(this);                            //Ручное редактирование ячеек
-    ui->m_tableView->setItemDelegate(delegate);
+    CustomDelegateView *delegate = new CustomDelegateView(this);
+    ui->m_tableView->setItemDelegateForColumn(3,delegate);
     connect(delegate, &CustomDelegateView::signalClicked, [this](QModelIndex index) {
         int result = QMessageBox::warning(this, "Предупреждение!", "Подтвердите удаление", QMessageBox::Yes, QMessageBox::No);
         if(result == QMessageBox::Yes)
@@ -37,6 +38,9 @@ void Table::onBtnClicked(QModelIndex index) {
 void Table::onSectionClicked(int logicalIndex)
 {
     (void)logicalIndex;
-    if(logicalIndex == 3)
-        m_model->append();                                                                  //Если был заголовок третьего стоблца, так как там имитатор кнопки, то сообщаем модели о добавление новой строки
+    if(logicalIndex == 3) {
+        DataDialogAdd dialog(this);
+        connect(&dialog, &DataDialogAdd::dataTransmission, m_model, &TableModel::append);
+        dialog.exec();
+        }
 }

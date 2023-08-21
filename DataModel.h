@@ -8,11 +8,11 @@
 class DataModel
 {
 public:
-    DataModel();
+    DataModel(int number, double x, double y);
 
     int m_number;   //!< Номер точки
-    QString m_x;    //!< Ширина
-    QString m_y;    //!< Долгота
+    double m_x;    //!< Ширина
+    double m_y;    //!< Долгота
 };
 
 #endif // DATAMODEL_H

@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     ../CustomDelegateView.cpp \
+    ../DataDialogAdd.cpp \
     ../DataModel.cpp \
     ../Table.cpp \
     ../TableModel.cpp \
@@ -18,12 +19,14 @@ SOURCES += \
 
 HEADERS += \
     ../CustomDelegateView.h \
+    ../DataDialogAdd.h \
     ../DataModel.h \
     ../Table.h \
     ../TableModel.h \
     ../CustomHeaderView.h
 
 FORMS += \
+    ../DataDialogAdd.ui \
     ../Table.ui
 
 # Default rules for deployment.

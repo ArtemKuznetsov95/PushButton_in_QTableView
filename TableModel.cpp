@@ -2,7 +2,14 @@
 #include <QDebug>
 
 TableModel::TableModel(QObject *parent) : QAbstractTableModel{parent} {
-  this->updateModel();
+
+    for(int i = 1; i < 4; i++) {
+        double x = i * 10.2;
+        double y = i * 100.3;
+
+        m_db_list.append(DataModel(i, x, y));
+    }
+    this->updateModel();
 }
 
 int TableModel::rowCount(const QModelIndex &parent) const {
@@ -22,16 +29,27 @@ QVariant TableModel::data(const QModelIndex &index, int role) const {
   if (role == Qt::DisplayRole || role == Qt::EditRole) {
     switch (index.column()) {
     case 0: {
-      variant =
-          QString::fromStdString("№ %1").arg(m_list.at(index.row()).m_number);
+        if(role == Qt::DisplayRole) {
+            variant = QString::fromStdString("№ %1").arg(m_list.at(index.row()).m_number);
+        }else if(role == Qt::EditRole) {
+            variant = m_list.at(index.row()).m_number;
+        }
       break;
     }
     case 1: {
-      variant = m_list.at(index.row()).m_x;
+        if(role == Qt::DisplayRole) {
+      variant = getCoordAsString(m_list.at(index.row()).m_x);
+        }else if(role == Qt::EditRole) {
+            variant = m_list.at(index.row()).m_x;
+        }
       break;
     }
     case 2: {
-      variant = m_list.at(index.row()).m_y;
+        if(role == Qt::DisplayRole) {
+      variant = getCoordAsString(m_list.at(index.row()).m_y);
+        }else if(role == Qt::EditRole) {
+            variant = m_list.at(index.row()).m_y;
+        }
       break;
     }
     }
@@ -62,7 +80,7 @@ Qt::ItemFlags TableModel::flags(const QModelIndex &index) const {
   Qt::ItemFlags flags = QAbstractTableModel::flags(index);
 
   if (index.isValid()) {
-    /*flags |= Qt::ItemIsEditable;*/        //Разрешение редактирования ячейки
+    flags |= Qt::ItemIsEditable;        //Разрешение редактирования ячейки
   }
   flags |= Qt::ItemIsSelectable;        //Выделение объекта
 
@@ -75,15 +93,16 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
   if (role == Qt::EditRole) {
     switch (index.column()) {
     case 0: {
-      m_list[index.row()].m_number = value.toInt();
+        QChar num = 0x2116;
+      m_list[index.row()].m_number = value.toString().remove(num).toInt();
       break;
     }
     case 1: {
-      m_list[index.row()].m_x = value.toString();
+      m_list[index.row()].m_x = value.toDouble();
       break;
     }
     case 2: {
-      m_list[index.row()].m_y = value.toString();
+      m_list[index.row()].m_y = value.toDouble();
       break;
     }
     }
@@ -95,12 +114,8 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
 
 void TableModel::updateModel() {
   m_list.clear();
-  for (int indexRowTable = 1; indexRowTable <= 4; indexRowTable++) {
-    DataModel datamodel;
-    datamodel.m_number = indexRowTable;
-    datamodel.m_x = QString::fromStdString("%1°14.5").arg(indexRowTable * 5);
-    datamodel.m_y = QString::fromStdString("%1°18.54").arg(indexRowTable * 5);
-    m_list.append(datamodel);
+ for(auto item : m_db_list) {
+    m_list.append(item);
   }
   emit dataUpdated();
 }
@@ -113,19 +128,35 @@ void TableModel::deleted(int indexRow) {
   emit dataUpdated();
 }
 
-void TableModel::append() {
+void TableModel::append(QList<QPair<double, double>> list) {
+
   beginResetModel();
-  DataModel datamodel;
+
   int indexRowTable;
   if (m_list.count() == 0)
     indexRowTable = 1;
   else
     indexRowTable = m_list.at(m_list.count() - 1).m_number + 1;
-  datamodel.m_number = indexRowTable;
-  datamodel.m_x = QString::fromStdString("%1°14.5").arg(indexRowTable * 5);
-  datamodel.m_y = QString::fromStdString("%1°18.54").arg(indexRowTable * 5);
+
+  for(auto item : list) {
+    DataModel datamodel(indexRowTable, item.first, item.second);
   m_list.append(datamodel);
+  }
   endResetModel();
 
   emit dataUpdated();
 }
+
+QString TableModel::getCoordAsString(double coord) const
+{
+    int degree = std::floor(coord);
+    double mins = ((coord - degree) * 3600) / 60;
+    QString str;
+    if(mins == 0) {
+        return QString("%1°").arg(QString::number(degree));
+    }
+    else {
+        return QString("%1°%2").arg(QString::number(degree), QString::number(mins));
+    }
+}
+

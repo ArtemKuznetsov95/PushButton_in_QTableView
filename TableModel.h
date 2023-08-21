@@ -2,8 +2,10 @@
 #define TABLEMODEL_H
 
 #include <QAbstractTableModel>
-#include <../DataModel.h>
+#include <DataModel.h>
 #include <QPushButton>
+#include <math.h>
+#include <DataDialogAdd.h>
 ///
 /// \brief The TableModel class - Класс модели для таблицы
 ///
@@ -37,10 +39,12 @@ public:
     ///
     /// \brief append       - Функция добавления строки в модели
     ///
-    void append();
+    void append(QList<QPair<double, double>> list);
+    QString getCoordAsString(double coord) const;
 
 private:
     QList<DataModel> m_list;    //!< Список данных модели отображающихся в таблице
+    QList<DataModel> m_db_list;
 };
 
 #endif // TABLEMODEL_H
